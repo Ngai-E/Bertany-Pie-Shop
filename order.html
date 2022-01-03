@@ -73,6 +73,7 @@
 
             <form action="http://localhost:8000/api/post" method="POST">
                 <input type="hidden" id="pie-order" name="pie-order">
+                <input type="hidden" id="location" name="location">
 
                 <div class="input-group">
                     <div><label for="first-name">First name</label></div>
@@ -177,6 +178,26 @@
     <script>
         window.addEventListener("DOMContentLoaded", function (e) {
             const order = localStorage.getItem("order");
+            const locationBox = document.querySelector("#location");
+
+            let location = {
+                latitude: "unknown",
+                longitude: "unkown"
+            }
+
+            window.navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    location = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    };
+                    locationBox.value = JSON.stringify(location);
+                },
+                function (error) {
+                    locationBox.value = JSON.stringify(location);
+                    console.log("Error user has not shared location");
+                }
+            );
 
             if (order) {
                 const pieOrder = JSON.parse(order);
